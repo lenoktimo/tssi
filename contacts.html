@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты - ООО «ЦСИ»</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Модальное окно консультации -->
+    <div class="modal-overlay" id="consultationModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Связаться с нами</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="consultationForm">
+                    <div class="form-group">
+                        <label for="modal-name">ФИО / Название организации *</label>
+                        <input type="text" id="modal-name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="modal-service">Тема обращения</label>
+                        <select id="modal-service" name="service">
+                            <option value="">Выберите тему</option>
+                            <option value="Консультация">Консультация</option>
+                            <option value="Заказ услуги">Заказ услуги</option>
+                            <option value="Сотрудничество">Сотрудничество</option>
+                            <option value="Другое">Другое</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="modal-email">Email *</label>
+                        <input type="email" id="modal-email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="modal-phone">Телефон</label>
+                        <input type="tel" id="modal-phone" name="phone">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="modal-message">Сообщение *</label>
+                        <textarea id="modal-message" name="message" rows="4" required></textarea>
+                    </div>
+                    
+                    <div class="consent-checkbox">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="agreement" required>
+                            <span>Я согласен на обработку персональных данных в соответствии с <a href="privacy-policy.html" target="_blank">Политикой конфиденциальности</a></span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-paper-plane"></i> Отправить сообщение
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="container">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="#2E7D32">
+                        <path d="M12,2C8.1,2,5,5.1,5,9c0,5.2,7,13,7,13s7-7.8,7-13C19,5.1,15.9,2,12,2z M12,11.5c-1.4,0-2.5-1.1-2.5-2.5s1.1-2.5,2.5-2.5s2.5,1.1,2.5,2.5S13.4,11.5,12,11.5z"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h1>ООО «ЦСИ»</h1>
+                    <p>Центр специализированных измерений</p>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> О нас</a></li>
+                    <li><a href="services.html"><i class="fas fa-tasks"></i> Услуги</a></li>
+                    <li><a href="documents.html"><i class="fas fa-file-certificate"></i> Документы</a></li>
+                    <li><a href="legislation.html"><i class="fas fa-gavel"></i> Законодательство</a></li>
+                    <li><a href="countries.html"><i class="fas fa-globe"></i> География</a></li>
+                    <li><a href="contacts.html" class="active"><i class="fas fa-address-book"></i> Контакты</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title">КОНТАКТЫ</h1>
+                <p class="page-subtitle">Свяжитесь с нами для получения консультации</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <div class="contact-grid">
+                    <div class="contact-info-card">
+                        <h2>Контактная информация</h2>
+                        <div class="contact-details">
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="contact-content">
+                                    <strong>Электронная почта:</strong>
+                                    <a href="mailto:info.csm77@yandex.ru">info.csm77@yandex.ru</a>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div class="contact-content">
+                                    <strong>Телефон:</strong>
+                                    <a href="tel:+79160893133">+7 (916) 089-31-33</a>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="contact-content">
+                                    <strong>Юридический адрес:</strong>
+                                    <p>101000, Российская Федерация, г. Москва, Уланский переулок, д.22 стр.1, пом. 26/5.</p>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="contact-content">
+                                    <strong>Режим работы:</strong>
+                                    <p>Пн-Пт: 9:00-18:00<br>Сб-Вс: по предварительной договоренности</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="requisites-card">
+                        <h2>Реквизиты компании</h2>
+                        <div class="requisites-list">
+                            <div class="requisite-item">
+                                <strong>Полное наименование:</strong>
+                                <p>Общество с ограниченной ответственностью «Центр специализированных измерений»</p>
+                            </div>
+                            <div class="requisite-item">
+                                <strong>Сокращенное наименование:</strong>
+                                <p>ООО «ЦСИ»</p>
+                            </div>
+                            <div class="requisite-item">
+                                <strong>ИНН/КПП:</strong>
+                                <p>7708454614 / 770801001</p>
+                            </div>
+                            <div class="requisite-item">
+                                <strong>ОГРН:</strong>
+                                <p>1257700430789 от 29.09.2025</p>
+                            </div>
+                            <div class="requisite-item">
+                                <strong>Расчетный счет:</strong>
+                                <p>40702810500000000000</p>
+                            </div>
+                            <div class="requisite-item">
+                                <strong>Банк:</strong>
+                                <p>ПАО "Сбербанк" г. Москва</p>
+                            </div>
+                            <div class="requisite-item">
+                                <strong>БИК:</strong>
+                                <p>044525225</p>
+                            </div>
+                            <div class="requisite-item">
+                                <strong>Корр. счет:</strong>
+                                <p>30101810400000000225</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form-section">
+                    <h2 class="section-title">Напишите нам</h2>
+                    <p class="text-center" style="margin-bottom: 30px; color: var(--text-light);">Заполните форму ниже и мы свяжемся с вами в ближайшее время</p>
+                    
+                    <form class="contact-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">ФИО / Название организации *</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email *</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone">Телефон</label>
+                                <input type="tel" id="phone" name="phone">
+                            </div>
+                            <div class="form-group">
+                                <label for="service">Тема обращения</label>
+                                <select id="service" name="service">
+                                    <option value="">Выберите тему</option>
+                                    <option value="Консультация">Консультация</option>
+                                    <option value="Заказ услуги">Заказ услуги</option>
+                                    <option value="Сотрудничество">Сотрудничество</option>
+                                    <option value="Вопрос по документации">Вопрос по документации</option>
+                                    <option value="Другое">Другое</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Ваше сообщение *</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        
+                        <div class="consent-checkbox">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="agreement" required>
+                                <span>Я согласен на обработку персональных данных в соответствии с <a href="privacy-policy.html" target="_blank">Политикой конфиденциальности</a></span>
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Отправить сообщение
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-main">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-col">
+                        <div class="footer-logo">
+                            <div class="logo-icon small">
+                                <svg width="30" height="30" viewBox="0 0 24 24" fill="#ffffff">
+                                    <path d="M12,2C8.1,2,5,5.1,5,9c0,5.2,7,13,7,13s7-7.8,7-13C19,5.1,15.9,2,12,2z M12,11.5c-1.4,0-2.5-1.1-2.5-2.5s1.1-2.5,2.5-2.5s2.5,1.1,2.5,2.5S13.4,11.5,12,11.5z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3>ООО «ЦСИ»</h3>
+                                <p>Центр специализированных измерений</p>
+                            </div>
+                        </div>
+                        <p class="footer-description">Экспертный контроль фумигации зерна и фитосанитарной безопасности грузов.</p>
+                    </div>
+                    
+                    <div class="footer-col">
+                        <h4>Навигация</h4>
+                        <ul class="footer-links">
+                            <li><a href="index.html">Главная</a></li>
+                            <li><a href="about.html">О компании</a></li>
+                            <li><a href="services.html">Услуги</a></li>
+                            <li><a href="documents.html">Документы</a></li>
+                            <li><a href="legislation.html">Законодательство</a></li>
+                            <li><a href="countries.html">География</a></li>
+                            <li><a href="contacts.html">Контакты</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-col">
+                        <h4>Контакты</h4>
+                        <ul class="footer-contacts">
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                <a href="mailto:info.csm77@yandex.ru">info.csm77@yandex.ru</a>
+                            </li>
+                            <li>
+                                <i class="fas fa-phone"></i>
+                                <a href="tel:+79160893133">+7 (916) 089-31-33</a>
+                            </li>
+                            <li>
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>г. Москва, Уланский пер., д.22 стр.1, пом. 26/5</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-col">
+                        <h4>Документы</h4>
+                        <ul class="footer-legislation">
+                            <li><a href="privacy-policy.html">Политика конфиденциальности</a></li>
+                            <li><a href="public-offer.html">Публичная оферта</a></li>
+                            <li><a href="personal-data.html">Согласие на обработку данных</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="footer-bottom-content">
+                    <p>© 2026 ООО «Центр специализированных измерений». Все права защищены.</p>
+                    <div class="footer-legal">
+                        <span>ИНН/КПП: 7708454614 / 770801001</span>
+                        <span>ОГРН: 1257700430789 от 29.09.2025</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
