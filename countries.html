@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>География услуг - ООО «ЦСИ»</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map {
+            width: 100%;
+            height: 550px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            z-index: 1;
+        }
+        .leaflet-control-attribution { display: none !important; }
+        .countries-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .section-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #2E7D32;
+        }
+        .countries-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .country-column {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        .country-column:hover {
+            background: #f0f7f0;
+            box-shadow: 0 2px 10px rgba(46,125,50,0.1);
+        }
+        .country-column h3 {
+            color: #2E7D32;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #2E7D32;
+            padding-bottom: 10px;
+        }
+        .country-column ol {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .country-column li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            font-size: 14px;
+            color: #333;
+            line-height: 1.4;
+            border-bottom: 1px dashed #e0e0e0;
+            padding-bottom: 8px;
+            transition: all 0.2s;
+        }
+        .country-column li:hover {
+            color: #2E7D32;
+            padding-left: 25px;
+            border-bottom-color: #2E7D32;
+        }
+        .country-column li:before {
+            content: "•";
+            position: absolute;
+            left: 5px;
+            color: #2E7D32;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .country-column li:last-child { border-bottom: none; }
+        .country-tooltip {
+            background: #2E7D32 !important;
+            color: white !important;
+            font-weight: 500;
+            padding: 6px 12px !important;
+            border-radius: 20px !important;
+            font-size: 13px !important;
+            border: none !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        @media (max-width: 992px) { .countries-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) {
+            .countries-grid { grid-template-columns: 1fr; }
+            #map { height: 400px; }
+            .countries-section { padding: 25px; }
+            .country-column { padding: 20px; }
+        }
+        @media (max-width: 480px) { #map { height: 350px; } }
+        .yandex-credit {
+            text-align: right;
+            font-size: 11px;
+            color: #999;
+            margin-top: 5px;
+            padding-right: 10px;
+        }
+        .yandex-credit a { color: #666; text-decoration: none; }
+        .yandex-credit a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <!-- Модальное окно консультации -->
+    <div class="modal-overlay" id="consultationModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Заявка на консультацию</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="consultationForm">
+                    <div class="form-group">
+                        <label for="modal-name">ФИО / Название организации *</label>
+                        <input type="text" id="modal-name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-service">Необходимая услуга</label>
+                        <select id="modal-service" name="service">
+                            <option value="">Выберите услугу</option>
+                            <option value="Контроль обеззараживания">Контроль обеззараживания</option>
+                            <option value="Сюрвейерское обслуживание">Сюрвейерское обслуживание</option>
+                            <option value="Координация в портах">Координация в портах</option>
+                            <option value="Консультация">Консультация</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-email">Email *</label>
+                        <input type="email" id="modal-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-phone">Телефон</label>
+                        <input type="tel" id="modal-phone" name="phone" placeholder="+7 (999) 123-45-67">
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-message">Ваш вопрос</label>
+                        <textarea id="modal-message" name="message" rows="4"></textarea>
+                    </div>
+                    <div class="consent-checkbox">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="agreement" required>
+                            <span>Я согласен на обработку персональных данных в соответствии с <a href="privacy-policy.html" target="_blank">Политикой конфиденциальности</a></span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-paper-plane"></i> Отправить заявку
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="container">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="#2E7D32">
+                        <path d="M12,2C8.1,2,5,5.1,5,9c0,5.2,7,13,7,13s7-7.8,7-13C19,5.1,15.9,2,12,2z M12,11.5c-1.4,0-2.5-1.1-2.5-2.5s1.1-2.5,2.5-2.5s2.5,1.1,2.5,2.5S13.4,11.5,12,11.5z"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h1>ООО «ЦСИ»</h1>
+                    <p>Центр специализированных измерений</p>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> О нас</a></li>
+                    <li><a href="services.html"><i class="fas fa-tasks"></i> Услуги</a></li>
+                    <li><a href="documents.html"><i class="fas fa-file-alt"></i> Документы</a></li>
+                    <li><a href="legislation.html"><i class="fas fa-gavel"></i> Законодательство</a></li>
+                    <li><a href="countries.html" class="active"><i class="fas fa-globe"></i> География</a></li>
+                    <li><a href="contacts.html"><i class="fas fa-address-book"></i> Контакты</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title">ГЕОГРАФИЯ УСЛУГ</h1>
+                <p class="page-subtitle">78 стран и более 120 портов по всему миру</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <div id="map"></div>
+                <div class="yandex-credit">
+                    © <a href="https://yandex.ru/maps" target="_blank">Яндекс.Карты</a>
+                </div>
+
+                <div class="countries-section">
+                    <h2 class="section-title">Полный список стран присутствия</h2>
+                    <div class="countries-grid">
+                        <div class="country-column">
+                            <ol>
+                                <li>Республика Албания</li>
+                                <li>Алжирская Народно Демократическая Республика</li>
+                                <li>Республика Ангола</li>
+                                <li>Аргентинская Республика</li>
+                                <li>Народная Республика Бангладеш</li>
+                                <li>Королевство Бельгия</li>
+                                <li>Республика Бенин</li>
+                                <li>Федеративная Республика Бразилия</li>
+                                <li>Республика Камерун</li>
+                                <li>Республика Кабо-Верде</li>
+                                <li>Республика Чили</li>
+                                <li>Демократическая Республика Конго</li>
+                                <li>Республика Кипр</li>
+                                <li>Королевство Дания</li>
+                                <li>Республика Эквадор</li>
+                                <li>Арабская Республика Египет</li>
+                                <li>Французская Республика</li>
+                                <li>Габонская Республика</li>
+                                <li>Республика Гамбия</li>
+                                <li>Грузия</li>
+                                <li>Федеративная Республика Германия</li>
+                                <li>Республика Гана</li>
+                                <li>Греческая Республика</li>
+                                <li>Гвинейская Республика</li>
+                                <li>Республика Гаити</li>
+                            </ol>
+                        </div>
+                        <div class="country-column">
+                            <ol start="26">
+                                <li>Республика Индия</li>
+                                <li>Исламская Республика Иран</li>
+                                <li>Ирландия</li>
+                                <li>Государство Израиль</li>
+                                <li>Итальянская Республика</li>
+                                <li>Республика Кот-д'Ивуар</li>
+                                <li>Иорданское Хашимитское Королевство</li>
+                                <li>Республика Кения</li>
+                                <li>Ливанская Республика</li>
+                                <li>Республика Либерия</li>
+                                <li>Государство Ливия</li>
+                                <li>Малайзия</li>
+                                <li>Исламская Республика Мавритания</li>
+                                <li>Мексика</li>
+                                <li>Королевство Марокко</li>
+                                <li>Республика Мозамбик</li>
+                                <li>Республика Намибия</li>
+                                <li>Королевство Нидерландов</li>
+                                <li>Федеративная Республика Нигерия</li>
+                                <li>Королевство Норвегия</li>
+                                <li>Панама</li>
+                                <li>Республика Перу</li>
+                                <li>Республика Филиппины</li>
+                                <li>Республика Польша</li>
+                                <li>Португальская Республика</li>
+                            </ol>
+                        </div>
+                        <div class="country-column">
+                            <ol start="51">
+                                <li>Румыния</li>
+                                <li>Республика Сенегал</li>
+                                <li>Южно-Африканская Республика</li>
+                                <li>Республика Корея</li>
+                                <li>Королевство Испания</li>
+                                <li>Демократическая Социалистическая Республика Шри-Ланка</li>
+                                <li>Сирийская Арабская Республика</li>
+                                <li>Объединённая Республика Танзания</li>
+                                <li>Королевство Таиланд</li>
+                                <li>Тоголезская Республика</li>
+                                <li>Тунисская Республика</li>
+                                <li>Турецкая Республика</li>
+                                <li>Соединённое Королевство Великобритании и Северной Ирландии</li>
+                                <li>Социалистическая Республика Вьетнам</li>
+                                <li>Демократическая Республика Конго</li>
+                                <li>Республика Джибути</li>
+                                <li>Республика Индонезия</li>
+                                <li>Республика Ирак</li>
+                                <li>Китайская Народная Республика</li>
+                                <li>Королевство Саудовская Аравия</li>
+                                <li>Государство Кувейт</li>
+                                <li>Султанат Оман</li>
+                                <li>Государство Катар</li>
+                                <li>Республика Судан</li>
+                                <li>Объединённые Арабские Эмираты</li>
+                                <li>Йеменская Республика</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-main">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-col">
+                        <div class="footer-logo">
+                            <div class="logo-icon small">
+                                <svg width="30" height="30" viewBox="0 0 24 24" fill="#ffffff">
+                                    <path d="M12,2C8.1,2,5,5.1,5,9c0,5.2,7,13,7,13s7-7.8,7-13C19,5.1,15.9,2,12,2z M12,11.5c-1.4,0-2.5-1.1-2.5-2.5s1.1-2.5,2.5-2.5s2.5,1.1,2.5,2.5S13.4,11.5,12,11.5z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3>ООО «ЦСИ»</h3>
+                                <p>Центр специализированных измерений</p>
+                            </div>
+                        </div>
+                        <p class="footer-description">Экспертный контроль фумигации зерна - фитосанитарная безопасность грузов</p>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Навигация</h4>
+                        <ul class="footer-links">
+                            <li><a href="index.html">Главная</a></li>
+                            <li><a href="about.html">О компании</a></li>
+                            <li><a href="services.html">Услуги</a></li>
+                            <li><a href="documents.html">Документы</a></li>
+                            <li><a href="legislation.html">Законодательство</a></li>
+                            <li><a href="countries.html">География</a></li>
+                            <li><a href="contacts.html">Контакты</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Контакты</h4>
+                        <ul class="footer-contacts">
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                <a href="mailto:info.csm77@yandex.ru">info.csm77@yandex.ru</a>
+                            </li>
+                            <li>
+                                <i class="fas fa-phone"></i>
+                                <a href="tel:+79160893133">+7 (916) 089-31-33</a>
+                            </li>
+                            <li>
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>101000, г. Москва, Уланский пер., д.22 стр.1, пом. 26/5</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Документы</h4>
+                        <ul class="footer-legislation">
+                            <li><a href="privacy-policy.html">Политика конфиденциальности</a></li>
+                            <li><a href="public-offer.html">Публичная оферта</a></li>
+                            <li><a href="personal-data.html">Согласие на обработку данных</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="footer-bottom-content">
+                    <p>© 2026 ООО «Центр специализированных измерений». Все права защищены.</p>
+                    <div class="footer-legal">
+                        <span>ИНН/КПП: 7708454614 / 770801001</span>
+                        <span>ОГРН: 1257700430789 от 29.09.2025</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var map = L.map('map', { attributionControl: false }).setView([30, 20], 2);
+            L.tileLayer('https://core-renderer-tiles.maps.yandex.net/tiles?l=map&x={x}&y={y}&z={z}&scale=1&lang=ru_RU', {
+                maxZoom: 19, minZoom: 2
+            }).addTo(map);
+            
+            var countryMarkers = [
+                { name: "Республика Албания", coords: [41.1533, 20.1683] },
+                { name: "Королевство Бельгия", coords: [50.8503, 4.3517] },
+                { name: "Республика Кипр", coords: [35.1264, 33.4299] },
+                { name: "Королевство Дания", coords: [56.2639, 9.5018] },
+                { name: "Французская Республика", coords: [46.6034, 1.8883] },
+                { name: "Грузия", coords: [42.3154, 43.3569] },
+                { name: "Федеративная Республика Германия", coords: [51.1657, 10.4515] },
+                { name: "Греческая Республика", coords: [39.0742, 21.8243] },
+                { name: "Ирландия", coords: [53.1424, -7.6921] },
+                { name: "Итальянская Республика", coords: [41.8719, 12.5674] },
+                { name: "Королевство Нидерландов", coords: [52.1326, 5.2913] },
+                { name: "Королевство Норвегия", coords: [60.4720, 8.4689] },
+                { name: "Республика Польша", coords: [51.9194, 19.1451] },
+                { name: "Португальская Республика", coords: [39.3999, -8.2245] },
+                { name: "Румыния", coords: [45.9432, 24.9668] },
+                { name: "Королевство Испания", coords: [40.4637, -3.7492] },
+                { name: "Турецкая Республика", coords: [38.9637, 35.2433] },
+                { name: "Соединённое Королевство", coords: [55.3781, -3.4360] },
+                { name: "Народная Республика Бангладеш", coords: [23.6850, 90.3563] },
+                { name: "Республика Индия", coords: [20.5937, 78.9629] },
+                { name: "Исламская Республика Иран", coords: [32.4279, 53.6880] },
+                { name: "Государство Израиль", coords: [31.0461, 34.8516] },
+                { name: "Иорданское Хашимитское Королевство", coords: [30.5852, 36.2384] },
+                { name: "Республика Корея", coords: [35.9078, 127.7669] },
+                { name: "Государство Кувейт", coords: [29.3117, 47.4818] },
+                { name: "Ливанская Республика", coords: [33.8547, 35.8623] },
+                { name: "Государство Ливия", coords: [26.3351, 17.2283] },
+                { name: "Малайзия", coords: [4.2105, 101.9758] },
+                { name: "Султанат Оман", coords: [21.5126, 55.9238] },
+                { name: "Государство Катар", coords: [25.3548, 51.1839] },
+                { name: "Королевство Саудовская Аравия", coords: [23.8859, 45.0792] },
+                { name: "Республика Филиппины", coords: [12.8797, 121.7740] },
+                { name: "Демократическая Социалистическая Республика Шри-Ланка", coords: [7.8731, 80.7718] },
+                { name: "Сирийская Арабская Республика", coords: [34.8021, 38.9968] },
+                { name: "Королевство Таиланд", coords: [15.8700, 100.9925] },
+                { name: "Социалистическая Республика Вьетнам", coords: [14.0583, 108.2772] },
+                { name: "Республика Индонезия", coords: [-0.7893, 113.9213] },
+                { name: "Республика Ирак", coords: [33.2232, 43.6793] },
+                { name: "Китайская Народная Республика", coords: [35.8617, 104.1954] },
+                { name: "Объединённые Арабские Эмираты", coords: [23.4241, 53.8478] },
+                { name: "Йеменская Республика", coords: [15.5527, 48.5164] },
+                { name: "Алжирская Народно Демократическая Республика", coords: [28.0339, 1.6596] },
+                { name: "Республика Ангола", coords: [-11.2027, 17.8739] },
+                { name: "Республика Бенин", coords: [9.3077, 2.3158] },
+                { name: "Республика Камерун", coords: [7.3697, 12.3547] },
+                { name: "Республика Кабо-Верде", coords: [16.5388, -23.0418] },
+                { name: "Демократическая Республика Конго", coords: [-4.0383, 21.7587] },
+                { name: "Республика Джибути", coords: [11.8251, 42.5903] },
+                { name: "Арабская Республика Египет", coords: [26.8206, 30.8025] },
+                { name: "Габонская Республика", coords: [-0.8037, 11.6094] },
+                { name: "Республика Гамбия", coords: [13.4432, -15.3101] },
+                { name: "Республика Гана", coords: [7.9465, -1.0232] },
+                { name: "Гвинейская Республика", coords: [9.9456, -9.6966] },
+                { name: "Республика Кот-д'Ивуар", coords: [7.5400, -5.5471] },
+                { name: "Республика Кения", coords: [-0.0236, 37.9062] },
+                { name: "Республика Либерия", coords: [6.4281, -9.4295] },
+                { name: "Исламская Республика Мавритания", coords: [21.0079, -10.9408] },
+                { name: "Королевство Марокко", coords: [31.7917, -7.0926] },
+                { name: "Республика Мозамбик", coords: [-18.6657, 35.5296] },
+                { name: "Республика Намибия", coords: [-22.9576, 18.4904] },
+                { name: "Федеративная Республика Нигерия", coords: [9.0820, 8.6753] },
+                { name: "Республика Сенегал", coords: [14.4974, -14.4524] },
+                { name: "Южно-Африканская Республика", coords: [-30.5595, 22.9375] },
+                { name: "Республика Судан", coords: [12.8628, 30.2176] },
+                { name: "Объединённая Республика Танзания", coords: [-6.3690, 34.8888] },
+                { name: "Тоголезская Республика", coords: [8.6195, 0.8248] },
+                { name: "Тунисская Республика", coords: [33.8869, 9.5375] },
+                { name: "Аргентинская Республика", coords: [-38.4161, -63.6167] },
+                { name: "Федеративная Республика Бразилия", coords: [-14.2350, -51.9253] },
+                { name: "Республика Чили", coords: [-35.6751, -71.5430] },
+                { name: "Республика Эквадор", coords: [-1.8312, -78.1834] },
+                { name: "Республика Гаити", coords: [18.9712, -72.2852] },
+                { name: "Мексика", coords: [23.6345, -102.5528] },
+                { name: "Панама", coords: [8.5380, -80.7821] },
+                { name: "Республика Перу", coords: [-9.1900, -75.0152] }
+            ];
+            
+            var greenIcon = L.divIcon({
+                className: 'custom-marker',
+                html: '<div style="background-color: #2E7D32; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"></div>',
+                iconSize: [12, 12], iconAnchor: [6, 6], popupAnchor: [0, -10]
+            });
+            
+            countryMarkers.forEach(function(country) {
+                var marker = L.marker(country.coords, { icon: greenIcon }).addTo(map);
+                marker.bindTooltip(country.name, {
+                    permanent: false, direction: 'top', opacity: 0.9, className: 'country-tooltip'
+                });
+            });
+            
+            L.control.scale({ imperial: false, metric: true, position: 'bottomleft' }).addTo(map);
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Согласие на обработку персональных данных - ООО «ЦСИ»</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .consent-content {
+            background: white;
+            border-radius: 10px;
+            padding: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            line-height: 1.7;
+            color: #333;
+        }
+        .consent-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #2E7D32;
+        }
+        .consent-header h1 {
+            color: #222;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+        }
+        .consent-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        .consent-section { margin-bottom: 40px; }
+        .consent-section h2 {
+            color: #2E7D32;
+            font-size: 1.6rem;
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .consent-section h3 {
+            color: #333;
+            font-size: 1.3rem;
+            margin: 30px 0 15px;
+        }
+        .consent-section p {
+            margin-bottom: 15px;
+            color: #444;
+        }
+        .consent-section ul {
+            margin: 20px 0;
+            padding-left: 25px;
+        }
+        .consent-section li {
+            margin-bottom: 8px;
+            position: relative;
+            color: #444;
+        }
+        .consent-note {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 30px 0;
+            border-left: 4px solid #2E7D32;
+        }
+        .consent-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        @media (max-width: 768px) {
+            .consent-content { padding: 30px; }
+            .consent-header h1 { font-size: 1.8rem; }
+            .consent-section h2 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Модальное окно консультации -->
+    <div class="modal-overlay" id="consultationModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Заявка на консультацию</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="consultationForm">
+                    <div class="form-group">
+                        <label for="modal-name">ФИО / Название организации *</label>
+                        <input type="text" id="modal-name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-service">Необходимая услуга</label>
+                        <select id="modal-service" name="service">
+                            <option value="">Выберите услугу</option>
+                            <option value="Контроль обеззараживания">Контроль обеззараживания</option>
+                            <option value="Сюрвейерское обслуживание">Сюрвейерское обслуживание</option>
+                            <option value="Координация в портах">Координация в портах</option>
+                            <option value="Консультация">Консультация</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-email">Email *</label>
+                        <input type="email" id="modal-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-phone">Телефон</label>
+                        <input type="tel" id="modal-phone" name="phone" placeholder="+7 (999) 123-45-67">
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-message">Ваш вопрос</label>
+                        <textarea id="modal-message" name="message" rows="4"></textarea>
+                    </div>
+                    <div class="consent-checkbox">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="agreement" required>
+                            <span>Я согласен на обработку персональных данных в соответствии с <a href="privacy-policy.html" target="_blank">Политикой конфиденциальности</a></span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-paper-plane"></i> Отправить заявку
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="container">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="#2E7D32">
+                        <path d="M12,2C8.1,2,5,5.1,5,9c0,5.2,7,13,7,13s7-7.8,7-13C19,5.1,15.9,2,12,2z M12,11.5c-1.4,0-2.5-1.1-2.5-2.5s1.1-2.5,2.5-2.5s2.5,1.1,2.5,2.5S13.4,11.5,12,11.5z"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h1>ООО «ЦСИ»</h1>
+                    <p>Центр специализированных измерений</p>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Главная</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> О нас</a></li>
+                    <li><a href="services.html"><i class="fas fa-tasks"></i> Услуги</a></li>
+                    <li><a href="documents.html"><i class="fas fa-file-alt"></i> Документы</a></li>
+                    <li><a href="legislation.html"><i class="fas fa-gavel"></i> Законодательство</a></li>
+                    <li><a href="countries.html"><i class="fas fa-globe"></i> География</a></li>
+                    <li><a href="contacts.html"><i class="fas fa-address-book"></i> Контакты</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="content-section">
+            <div class="container">
+                <div class="consent-content">
+                    <div class="consent-header">
+                        <h1>СОГЛАСИЕ НА ОБРАБОТКУ ПЕРСОНАЛЬНЫХ ДАННЫХ</h1>
+                        <p>Настоящее Согласие составлено в соответствии с требованиями Федерального закона от 27.07.2006 №152-ФЗ «О персональных данных»</p>
+                    </div>
+                    
+                    <div class="consent-warning">
+                        <strong>Важно:</strong> Заполняя любые формы на сайте ООО «ЦСИ», вы автоматически даете согласие на обработку ваших персональных данных в соответствии с условиями, указанными ниже.
+                    </div>
+                    
+                    <div class="consent-section">
+                        <h2>ТЕКСТ СОГЛАСИЯ</h2>
+                        <p>Настоящим я, далее – «Субъект персональных данных», во исполнение требований Федерального закона от 27.07.2006 г. № 152-ФЗ «О персональных данных» (с изменениями и дополнениями) свободно, своей волей и в своем интересе даю свое согласие Обществу с ограниченной ответственностью «Центр специализированных измерений» (далее – «Оператор»), на обработку своих персональных данных, указанных при заполнении веб-формы на сайте ООО «ЦСИ», направляемой (заполненной) с использованием Сайта.</p>
+                    </div>
+                    
+                    <div class="consent-section">
+                        <h3>1. Состав персональных данных</h3>
+                        <p>Персональные данные, на обработку которых дается согласие:</p>
+                        <ul>
+                            <li>Фамилия, имя, отчество;</li>
+                            <li>Контактный телефон;</li>
+                            <li>Адрес электронной почты (e-mail);</li>
+                            <li>Наименование организации;</li>
+                            <li>Иные персональные данные, предоставляемые Субъектом персональных данных.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="consent-section">
+                        <h3>2. Цели обработки персональных данных</h3>
+                        <p>Обработка персональных данных осуществляется в следующих целях:</p>
+                        <ul>
+                            <li>Оказание услуг по контролю фумигации зерна, консультаций;</li>
+                            <li>Обратная связь с Субъектом персональных данных;</li>
+                            <li>Заключение и исполнение договоров на оказание услуг;</li>
+                            <li>Отправка уведомлений, информации об услугах;</li>
+                            <li>Выполнение требований законодательства Российской Федерации.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="consent-section">
+                        <h3>3. Перечень действий с персональными данными</h3>
+                        <p>Согласие дается на совершение следующих действий (операций) с указанными персональными данными:</p>
+                        <ul>
+                            <li>Сбор;</li>
+                            <li>Запись;</li>
+                            <li>Систематизация;</li>
+                            <li>Накопление;</li>
+                            <li>Хранение;</li>
+                            <li>Уточнение (обновление, изменение);</li>
+                            <li>Использование;</li>
+                            <li>Удаление;</li>
+                            <li>Уничтожение.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="consent-section">
+                        <h3>4. Срок действия согласия</h3>
+                        <p>Настоящее согласие действует с момента его предоставления и до момента отзыва Субъектом персональных данных.</p>
+                        <p>Согласие может быть отозвано Субъектом персональных данных путем направления письменного заявления по адресу электронной почты: info.csm77@yandex.ru</p>
+                    </div>
+                    
+                    <div class="consent-section">
+                        <h3>5. Передача персональных данных</h3>
+                        <p>Оператор обязуется не передавать полученные персональные данные третьим лицам, за исключением следующих случаев:</p>
+                        <ul>
+                            <li>По запросам уполномоченных органов государственной власти РФ;</li>
+                            <li>В случаях, прямо предусмотренных действующим законодательством РФ.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="consent-section">
+                        <h3>6. Права Субъекта персональных данных</h3>
+                        <p>Субъект персональных данных имеет право:</p>
+                        <ul>
+                            <li>Требовать уточнения своих персональных данных, их блокирования или уничтожения в случае, если персональные данные являются неполными, устаревшими, неточными, незаконно полученными или не являются необходимыми для заявленной цели обработки;</li>
+                            <li>Отозвать свое согласие на обработку персональных данных;</li>
+                            <li>Требовать устранения неправомерных действий Оператора в отношении его персональных данных;</li>
+                            <li>Обжаловать действия или бездействие Оператора в уполномоченный орган по защите прав субъектов персональных данных или в судебном порядке.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="consent-section">
+                        <h3>7. Контактная информация Оператора</h3>
+                        <p><strong>Оператор:</strong> ООО «Центр специализированных измерений»</p>
+                        <p><strong>Сокращенное наименование:</strong> ООО «ЦСИ»</p>
+                        <p><strong>Электронная почта:</strong> info.csm77@yandex.ru</p>
+                        <p><strong>Телефон:</strong> +7 (916) 089-31-33</p>
+                        <p><strong>Юридический адрес:</strong> 101000, г. Москва, Уланский пер., д.22 стр.1, пом. 26/5</p>
+                        
+                        <div class="consent-note">
+                            <p><strong>Примечание:</strong> Настоящее Согласие является приложением к <a href="privacy-policy.html">Политике конфиденциальности</a> ООО «ЦСИ» и действует в соответствии с ее положениями.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center" style="margin-top: 50px;">
+                        <a href="index.html" class="btn btn-primary">
+                            <i class="fas fa-arrow-left"></i> Вернуться на главную страницу
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-main">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-col">
+                        <div class="footer-logo">
+                            <div class="logo-icon small">
+                                <svg width="30" height="30" viewBox="0 0 24 24" fill="#ffffff">
+                                    <path d="M12,2C8.1,2,5,5.1,5,9c0,5.2,7,13,7,13s7-7.8,7-13C19,5.1,15.9,2,12,2z M12,11.5c-1.4,0-2.5-1.1-2.5-2.5s1.1-2.5,2.5-2.5s2.5,1.1,2.5,2.5S13.4,11.5,12,11.5z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3>ООО «ЦСИ»</h3>
+                                <p>Центр специализированных измерений</p>
+                            </div>
+                        </div>
+                        <p class="footer-description">Экспертный контроль фумигации зерна - фитосанитарная безопасность грузов.</p>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Навигация</h4>
+                        <ul class="footer-links">
+                            <li><a href="index.html">Главная</a></li>
+                            <li><a href="about.html">О компании</a></li>
+                            <li><a href="services.html">Услуги</a></li>
+                            <li><a href="documents.html">Документы</a></li>
+                            <li><a href="legislation.html">Законодательство</a></li>
+                            <li><a href="countries.html">География</a></li>
+                            <li><a href="contacts.html">Контакты</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Контакты</h4>
+                        <ul class="footer-contacts">
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                <a href="mailto:info.csm77@yandex.ru">info.csm77@yandex.ru</a>
+                            </li>
+                            <li>
+                                <i class="fas fa-phone"></i>
+                                <a href="tel:+79160893133">+7 (916) 089-31-33</a>
+                            </li>
+                            <li>
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>101000, г. Москва, Уланский пер., д.22 стр.1, пом. 26/5</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Документы</h4>
+                        <ul class="footer-legislation">
+                            <li><a href="privacy-policy.html">Политика конфиденциальности</a></li>
+                            <li><a href="public-offer.html">Публичная оферта</a></li>
+                            <li><a href="personal-data.html">Согласие на обработку данных</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="footer-bottom-content">
+                    <p>© 2026 ООО «Центр специализированных измерений». Все права защищены.</p>
+                    <div class="footer-legal">
+                        <span>ИНН/КПП: 7708454614 / 770801001</span>
+                        <span>ОГРН: 1257700430789 от 29.09.2025</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
